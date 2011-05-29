@@ -273,7 +273,7 @@ package noiseandheat.flexunit.visuallistener.components
         {
             var message:String = "[no details]";
 
-            if(description) message = "[" + description.displayName + "]";
+            if(description) message = "<font color='#888888' size='-1'>[" + description.displayName + "]</font>";
 
             return message + (_message ? " " + _message : "");
         }

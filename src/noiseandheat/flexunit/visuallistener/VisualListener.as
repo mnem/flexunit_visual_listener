@@ -130,7 +130,7 @@ package noiseandheat.flexunit.visuallistener
             var nugget:Nugget = event.target as Nugget;
             if(nugget != null)
             {
-                tiptext.text = nugget.toString();
+                tiptext.htmlText = nugget.toString();
                 tiptext.width = tiptext.textWidth + 5;
                 tiptext.height = tiptext.textHeight + 5;
 
