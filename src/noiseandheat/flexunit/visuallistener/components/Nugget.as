@@ -273,9 +273,9 @@ package noiseandheat.flexunit.visuallistener.components
         {
             var message:String = "[no details]";
 
-            if(description) message = description.displayName;
+            if(description) message = "[" + description.displayName + "]";
 
-            return message + (_message ? ": " + _message : "");
+            return message + (_message ? " " + _message : "");
         }
 
         public function toFullString():String

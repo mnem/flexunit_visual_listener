@@ -25,18 +25,19 @@
  */
 package noiseandheat.flexunit.visuallistener
 {
+    import noiseandheat.flexunit.visuallistener.components.Nugget;
+    import org.flexunit.runner.IDescription;
+    import org.flexunit.runner.Result;
+    import org.flexunit.runner.notification.Failure;
+    import org.flexunit.runner.notification.IRunListener;
     import flash.display.Sprite;
     import flash.events.MouseEvent;
     import flash.geom.Point;
     import flash.geom.Rectangle;
     import flash.system.System;
     import flash.text.TextField;
+    import flash.text.TextFormat;
     import flash.utils.Dictionary;
-    import noiseandheat.flexunit.visuallistener.components.Nugget;
-    import org.flexunit.runner.IDescription;
-    import org.flexunit.runner.Result;
-    import org.flexunit.runner.notification.Failure;
-    import org.flexunit.runner.notification.IRunListener;
 
     /**
      * Visual flexunit results listener. To use, add to the stage,
@@ -73,6 +74,12 @@ package noiseandheat.flexunit.visuallistener
             t.wordWrap = false;
             t.background = true;
             t.backgroundColor = 0xffffff;
+
+            var tf:TextFormat = t.defaultTextFormat;
+            tf.font = "Arial";
+            tf.size = 14;
+
+            t.defaultTextFormat = tf;
 
             return t;
         }
