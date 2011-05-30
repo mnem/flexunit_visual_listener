@@ -23,15 +23,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package noiseandheat.flexunit.visualiser
+package noiseandheatexample
 {
-    [Suite]
-    [RunWith("org.flexunit.runners.Suite")]
-    public class VisualiserSuite
+    import org.flexunit.Assert;
+
+    public class NonePassingTest
     {
-        public var allPassingTest:AllPassingTest;
-        public var somePassingTest:SomePassingTest;
-        public var nonePassingTest:NonePassingTest;
-        public var emptyTest:EmptyTest;
+        [Test]
+        public function testOne():void
+        {
+            Assert.assertTrue("Checking that it's true", false);
+        }
+
+        [Test]
+        public function testTwo():void
+        {
+            Assert.assertTrue("Checking that it's true", false);
+        }
+
+        [Test]
+        public function testThree():void
+        {
+            Assert.assertTrue("Checking that it's true", false);
+        }
+
+        [Test]
+        public function testFour():void
+        {
+            Assert.assertTrue("Checking that it's true", false);
+        }
+
+        [Test]
+        public function testFive():void
+        {
+            Assert.assertTrue("Checking that it's true", false);
+        }
     }
 }

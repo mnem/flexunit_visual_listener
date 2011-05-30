@@ -25,35 +25,33 @@
  */
 package
 {
-    import noiseandheat.NoiseAndHeatSuite;
-    import noiseandheat.flexunit.visuallistener.VisualListener;
-
-    import org.flexunit.internals.TraceListener;
-    import org.flexunit.runner.FlexUnitCore;
-    import org.fluint.uiImpersonation.VisualTestEnvironmentBuilder;
-
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
     import flash.events.Event;
+    import noiseandheat.flexunit.visuallistener.VisualListener;
+    import noiseandheatexample.NoiseAndHeatExampleSuite;
+    import org.flexunit.internals.TraceListener;
+    import org.flexunit.runner.FlexUnitCore;
+    import org.fluint.uiImpersonation.VisualTestEnvironmentBuilder;
 
-    [SWF(backgroundColor="#000000", frameRate="120", width="800", height="600")]
-    public class TestRunner
-        extends Sprite
+    [SWF(backgroundColor="#000000", frameRate="120", width="400", height="300")]
+    public class TestRunnerExample extends Sprite
     {
         private var core:FlexUnitCore;
         private var listener:VisualListener;
 
-        public function TestRunner()
+        public function TestRunnerExample()
         {
             core = new FlexUnitCore();
             VisualTestEnvironmentBuilder.getInstance(this);
 
-            listener = new VisualListener(800, 600);
+            listener = new VisualListener(400, 300);
             addChild(listener);
-
             core.addListener(listener);
             core.addListener(new TraceListener());
+
+            core.run(NoiseAndHeatExampleSuite);
 
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
         }
@@ -64,13 +62,6 @@ package
 
             stage.align = StageAlign.TOP_LEFT;
             stage.scaleMode = StageScaleMode.NO_SCALE;
-
-            runTests();
-        }
-
-        protected function runTests():void
-        {
-            core.run(NoiseAndHeatSuite);
         }
     }
 }

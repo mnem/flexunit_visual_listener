@@ -30,6 +30,9 @@ Sample test runner:
 	            listener = new VisualListener();
 	            addChild(listener);
 	            core.addListener(listener);
+	            
+	            // Add a trace listener too if you want some trace output
+                core.addListener(new TraceListener());
 
 	            core.run(NoiseAndHeatSuite);
 

@@ -23,9 +23,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package noiseandheat.flexunit.visualiser
+package noiseandheat.flexunit.visuallistener
 {
-    public class EmptyTest
+    [Suite]
+    [RunWith("org.flexunit.runners.Suite")]
+    public class VisualListenerSuite
     {
+        public var visualListenerTest:VisualListenerTest;
     }
 }

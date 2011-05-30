@@ -23,14 +23,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package
+package noiseandheatexample
 {
-    import noiseandheat.NoiseAndHeatSuite;
+    import org.flexunit.Assert;
 
-    [Suite]
-    [RunWith("org.flexunit.runners.Suite")]
-    public class MainSuite
+    public class SomeIgnoredTest
     {
-        public var noiseAndHeatSuite:NoiseAndHeatSuite;
+        [Ignore]
+        [Test]
+        public function testOne():void
+        {
+            Assert.assertTrue("Checking that it's true", false);
+        }
+
+        [Test]
+        public function testTwo():void
+        {
+            Assert.assertTrue("Checking that it's true", true);
+        }
+
+        [Ignore]
+        [Test]
+        public function testThree():void
+        {
+            Assert.assertTrue("Checking that it's true", false);
+        }
+
+        [Test]
+        public function testFour():void
+        {
+            Assert.assertTrue("Checking that it's true", true);
+        }
+
+        [Ignore]
+        [Test]
+        public function testFive():void
+        {
+            Assert.assertTrue("Checking that it's true", false);
+        }
     }
 }

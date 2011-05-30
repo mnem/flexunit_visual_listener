@@ -26,17 +26,16 @@
 package noiseandheat.flexunit.visuallistener
 {
     import noiseandheat.flexunit.visuallistener.components.Nugget;
+    import noiseandheat.flexunit.visuallistener.components.TwoToneLabel;
+
     import org.flexunit.runner.IDescription;
     import org.flexunit.runner.Result;
     import org.flexunit.runner.notification.Failure;
     import org.flexunit.runner.notification.IRunListener;
+
     import flash.display.Sprite;
     import flash.events.MouseEvent;
-    import flash.geom.Point;
-    import flash.geom.Rectangle;
     import flash.system.System;
-    import flash.text.TextField;
-    import flash.text.TextFormat;
     import flash.utils.Dictionary;
 
     /**
@@ -49,39 +48,47 @@ package noiseandheat.flexunit.visuallistener
         extends Sprite
         implements IRunListener
     {
+        static internal const NUGGET_Y_START:int = 32;
+
         protected var descriptionToNuggetIndex:Dictionary;
-        protected var nuggets:Vector.<Nugget>;
+        internal var nuggets:Vector.<Nugget>;
         protected var nextNuggetY:int;
         protected var nextNuggetX:int;
 
-        protected var tiptext:TextField;
+        protected var tiptext:TwoToneLabel;
+        protected var statustext:TwoToneLabel;
 
-        public function VisualListener()
+        public var logToTrace:Boolean;
+
+        protected var _maxWidth:int;
+        protected var _maxHeight:int;
+
+        public function VisualListener(maxWidth:int, maxHeight:int):void
         {
+            _maxWidth = maxWidth;
+            _maxHeight = maxHeight;
+
             descriptionToNuggetIndex = new Dictionary();
             nuggets = new Vector.<Nugget>();
 
-            tiptext = createTipText();
+            tiptext = new TwoToneLabel(maxWidth, "<font color='#888888' size='-1'>[", "]</font> ");
+            tiptext.visible = false;
             addChild(tiptext);
+
+            statustext = new TwoToneLabel(maxWidth, "<font color='#000088'><b>", "</b></font> ");
+            statustext.setText("Starting", "");
+            statustext.wordWrap = false;
+            addChild(statustext);
+
+            nextNuggetY = NUGGET_Y_START;
         }
 
-        protected function createTipText():TextField
+        protected function log(message:String):void
         {
-            var t:TextField = new TextField();
-            t.visible = false;
-            t.multiline = false;
-            t.mouseEnabled = false;
-            t.wordWrap = false;
-            t.background = true;
-            t.backgroundColor = 0xffffff;
-
-            var tf:TextFormat = t.defaultTextFormat;
-            tf.font = "Arial";
-            tf.size = 14;
-
-            t.defaultTextFormat = tf;
-
-            return t;
+            if(logToTrace)
+            {
+                trace("[VisualListener log]" + message);
+            }
         }
 
         protected function fetchNugget(description:IDescription):Nugget
@@ -109,13 +116,10 @@ package noiseandheat.flexunit.visuallistener
 
             addChild(nugget);
 
-            nextNuggetX += nugget.width;
-
-            var p:Point = new Point(nextNuggetX, nextNuggetY);
-            p = localToGlobal(p);
-            if(p.x > stage.stageWidth)
+            nextNuggetX += Nugget.WIDTH;
+            if(nextNuggetX + Nugget.WIDTH > _maxWidth)
             {
-                nextNuggetY += nugget.height;
+                nextNuggetY += Nugget.HEIGHT;
                 nextNuggetX = 0;
             }
 
@@ -125,46 +129,40 @@ package noiseandheat.flexunit.visuallistener
             return nugget;
         }
 
+        protected function showTipForNugget(nugget:Nugget):void
+        {
+            tiptext.setText(nugget.displayName, nugget.message);
+            tiptext.x = nugget.x;
+            tiptext.y = nugget.y - tiptext.height;
+
+            if(tiptext.y < 0)
+            {
+              tiptext.y = nugget.y + Nugget.HEIGHT + 8;
+            }
+
+            if(tiptext.x + tiptext.width > _maxWidth)
+            {
+                tiptext.x = _maxWidth - tiptext.width;
+            }
+
+            setChildIndex(tiptext, numChildren - 1);
+
+            dimNuggets();
+            undimNugget(nugget);
+
+            tiptext.visible = true;
+        }
+
         protected function overNugget(event:MouseEvent):void
         {
             var nugget:Nugget = event.target as Nugget;
             if(nugget != null)
             {
-                tiptext.htmlText = nugget.toString();
-                tiptext.width = tiptext.textWidth + 5;
-                tiptext.height = tiptext.textHeight + 5;
-
-                tiptext.x = nugget.x;
-                tiptext.y = nugget.y - tiptext.height;
-
-                var r:Rectangle = tiptext.getBounds(stage);
-
-                if(r.y < 0)
-                {
-                  tiptext.y = nugget.y + nugget.height + 16;
-                }
-
-                if(r.right > stage.stageWidth)
-                {
-                    var diff:int = r.right - stage.stageWidth;
-                    if(r.x - diff < 0)
-                    {
-                        diff = r.x;
-                    }
-
-                    tiptext.x -= diff;
-                }
-
-                setChildIndex(tiptext, numChildren - 1);
-
-                dimNuggets();
-                undimNugget(nugget);
-
-                tiptext.visible = true;
+                showTipForNugget(nugget);
             }
             else
             {
-                trace("We don't seem to be targetting a nugget despite getting an event. Most peculiar.");
+                log("We don't seem to be targetting a nugget despite getting an event. Most peculiar.");
             }
         }
 
@@ -204,7 +202,7 @@ package noiseandheat.flexunit.visuallistener
             }
             else
             {
-                trace("We don't seem to be targetting a nugget despite getting an event. Most peculiar.");
+                log("We don't seem to be targetting a nugget despite getting an event. Most peculiar.");
             }
         }
 
@@ -218,7 +216,7 @@ package noiseandheat.flexunit.visuallistener
             }
             else
             {
-                trace("We don't seem to be targetting a nugget despite getting an event. Most peculiar.");
+                log("We don't seem to be targetting a nugget despite getting an event. Most peculiar.");
             }
         }
 
@@ -233,8 +231,10 @@ package noiseandheat.flexunit.visuallistener
             {
                 n.state = Nugget.STATE_IGNORED;
             }
+            n.message = "Ignored";
 
-            trace("testIgnored: " + n);
+            log("testIgnored: " + n);
+            statustext.setText("Ignored", description.displayName);
         }
 
         public function testFinished(description:IDescription):void
@@ -248,8 +248,13 @@ package noiseandheat.flexunit.visuallistener
             {
                 n.state = Nugget.STATE_FINISHED;
             }
+            if(!n.message)
+            {
+                n.message = "Finished";
+            }
 
-            trace("testFinished: " + n);
+            log("testFinished: " + n);
+            statustext.setText("Finished", description.displayName);
         }
 
         public function testStarted(description:IDescription):void
@@ -264,7 +269,8 @@ package noiseandheat.flexunit.visuallistener
                n.state = Nugget.STATE_STARTED;
             }
 
-            trace("testStarted: " + n);
+            log("testStarted: " + n);
+            statustext.setText("Started", description.displayName);
         }
 
         public function testRunStarted(description:IDescription):void
@@ -278,25 +284,37 @@ package noiseandheat.flexunit.visuallistener
             {
                 n.state = Nugget.STATE_RUN_STARTED;
             }
-
-            trace("testRunStarted: " + n);
+            n.displayName = "Test run started";
+            log("testRunStarted: " + n);
+            statustext.setText("Test run started", description.displayName);
         }
 
         public function testRunFinished(result:Result):void
         {
             var n:Nugget = createNugget(null);
+            var message:String;
+            var runTime:Number = result.runTime / 1000;
             if(result.successful)
             {
                 n.state = Nugget.STATE_RUN_FINISHED_SUCCESS;
-                n.message = "Test run successful";
+                message = "Success!";
+                message += " Tests: " + result.runCount;
+                message += " Time: " + runTime + " second" + (runTime == 1 ? "" : "s");
+                statustext.backgroundColor = 0x00ff00;
             }
             else
             {
                 n.state = Nugget.STATE_RUN_FINISHED_FAILURE;
-                n.message = "Test run failed";
+                message = "Failures!";
+                message += " " + result.failureCount + " out of " + result.runCount + " failed!";
+                message += " Time: " + runTime + " second" + (runTime == 1 ? "" : "s");
+                statustext.backgroundColor = 0xff0000;
             }
+            n.displayName = "Test run finished";
+            n.message = message;
 
-            trace("testRunFinished: " + n);
+            log("testRunFinished: " + n);
+            statustext.setText("Test run finished", message);
         }
 
         public function testAssumptionFailure(failure:Failure):void
@@ -312,7 +330,7 @@ package noiseandheat.flexunit.visuallistener
             }
             n.message = failure.message;
             n.stackTrace = failure.stackTrace;
-            trace("testAssumptionFailure: " + n);
+            log("testAssumptionFailure: " + n);
         }
 
         public function testFailure(failure:Failure):void
@@ -328,7 +346,7 @@ package noiseandheat.flexunit.visuallistener
             }
             n.message = failure.message;
             n.stackTrace = failure.stackTrace;
-            trace("testFailure: " + n);
+            log("testFailure: " + n);
         }
     }
 }

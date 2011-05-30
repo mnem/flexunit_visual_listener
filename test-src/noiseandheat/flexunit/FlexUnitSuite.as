@@ -25,12 +25,11 @@
  */
 package noiseandheat.flexunit
 {
-    import noiseandheat.flexunit.visualiser.VisualiserSuite;
-
+    import noiseandheat.flexunit.visuallistener.VisualListenerSuite;
     [Suite]
     [RunWith("org.flexunit.runners.Suite")]
     public class FlexUnitSuite
     {
-        public var visualiserSuite:VisualiserSuite;
+        public var visualListenerSuite:VisualListenerSuite;
     }
 }

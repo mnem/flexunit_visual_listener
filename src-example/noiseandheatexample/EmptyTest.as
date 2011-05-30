@@ -23,13 +23,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package noiseandheat
+package noiseandheatexample
 {
-    import noiseandheat.flexunit.FlexUnitSuite;
-    [Suite]
-    [RunWith("org.flexunit.runners.Suite")]
-    public class NoiseAndHeatSuite
+    public class EmptyTest
     {
-        public var flexUnitSuite:FlexUnitSuite;
     }
 }

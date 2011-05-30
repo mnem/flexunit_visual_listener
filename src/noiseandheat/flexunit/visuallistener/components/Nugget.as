@@ -25,8 +25,9 @@
  */
 package noiseandheat.flexunit.visuallistener.components
 {
-    import flash.display.LineScaleMode;
     import org.flexunit.runner.IDescription;
+
+    import flash.display.LineScaleMode;
     import flash.display.Sprite;
 
     /**
@@ -35,10 +36,13 @@ package noiseandheat.flexunit.visuallistener.components
     public class Nugget
         extends Sprite
     {
-        protected static const X:int =  2;
-        protected static const Y:int =  2;
-        protected static const W:int = 12;
-        protected static const H:int = 12;
+        protected static const INNER_X:int =  2;
+        protected static const INNER_Y:int =  2;
+        protected static const INNER_W:int = 12;
+        protected static const INNER_H:int = 12;
+
+        public static const WIDTH:int = INNER_W + INNER_X + INNER_X;
+        public static const HEIGHT:int = INNER_W + INNER_Y + INNER_Y;
 
         public static const STATE_UNCERTAIN           :int = 0;
         public static const STATE_IGNORED             :int = 1;
@@ -57,10 +61,15 @@ package noiseandheat.flexunit.visuallistener.components
         protected var _state:int;
         protected var _message:String;
         protected var _stackTrace:String;
+        protected var _overrideDisplayName:String;
 
         public function Nugget(description:IDescription)
         {
             mouseChildren = false;
+
+            _message = "";
+            _stackTrace = "";
+
             this._state = STATE_UNCERTAIN;
             this.description = description;
             _message = "";
@@ -88,27 +97,24 @@ package noiseandheat.flexunit.visuallistener.components
             graphics.lineStyle(1, 0x000000, 0, true, LineScaleMode.NONE);
 
             graphics.beginFill(0xffffff, 1.0);
-            graphics.drawRect(X-2, Y-2, W+4, H+4);
+            graphics.drawRect(INNER_X-2, INNER_Y-2, INNER_W+4, INNER_H+4);
             graphics.endFill();
 
             graphics.beginFill(0x000000, 1.0);
-            graphics.drawRect(X-1, Y-1, W+2, H+2);
+            graphics.drawRect(INNER_X-1, INNER_Y-1, INNER_W+2, INNER_H+2);
             graphics.endFill();
         }
 
         protected function drawUncertain():void
         {
-            graphics.lineStyle(1, 0xcccccc, 1, true, LineScaleMode.NONE);
-
-            graphics.drawRect(X + 3, Y + 3, W - 7, H - 7);
         }
 
         protected function drawIgnored():void
         {
             graphics.lineStyle(1, 0x000000, 0, true, LineScaleMode.NONE);
 
-            graphics.beginFill(0xcccccc, 0.25);
-            graphics.drawRect(X, Y, W, H);
+            graphics.beginFill(0xcccccc, 1.0);
+            graphics.drawRect(INNER_X, INNER_Y, INNER_W, INNER_H);
             graphics.endFill();
         }
 
@@ -117,7 +123,7 @@ package noiseandheat.flexunit.visuallistener.components
             graphics.lineStyle(1, 0x000000, 0, true, LineScaleMode.NONE);
 
             graphics.beginFill(0x00ff00, 1.0);
-            graphics.drawEllipse(X, Y, W, H);
+            graphics.drawEllipse(INNER_X, INNER_Y, INNER_W, INNER_H);
             graphics.endFill();
         }
 
@@ -126,7 +132,7 @@ package noiseandheat.flexunit.visuallistener.components
             graphics.lineStyle(1, 0x000000, 0, true, LineScaleMode.NONE);
 
             graphics.beginFill(0x00ff00, 1.0);
-            graphics.drawEllipse(X, Y, W, H);
+            graphics.drawEllipse(INNER_X, INNER_Y, INNER_W, INNER_H);
             graphics.endFill();
         }
 
@@ -135,7 +141,7 @@ package noiseandheat.flexunit.visuallistener.components
             graphics.lineStyle(1, 0x000000, 0, true, LineScaleMode.NONE);
 
             graphics.beginFill(0xff0000, 1.0);
-            graphics.drawEllipse(X, Y, W, H);
+            graphics.drawEllipse(INNER_X, INNER_Y, INNER_W, INNER_H);
             graphics.endFill();
         }
 
@@ -144,7 +150,7 @@ package noiseandheat.flexunit.visuallistener.components
             graphics.lineStyle(1, 0x000000, 0, true, LineScaleMode.NONE);
 
             graphics.beginFill(0xffcc00, 1.0);
-            graphics.drawRect(X + W/2, Y, W/2, H);
+            graphics.drawRect(INNER_X + INNER_W/2, INNER_Y, INNER_W/2, INNER_H);
             graphics.endFill();
         }
 
@@ -153,11 +159,11 @@ package noiseandheat.flexunit.visuallistener.components
             graphics.lineStyle(1, 0x000000, 0, true, LineScaleMode.NONE);
 
             graphics.beginFill(0x00ff00, 1.0);
-            graphics.drawRect(X, Y, W/2, H);
+            graphics.drawRect(INNER_X, INNER_Y, INNER_W/2, INNER_H);
             graphics.endFill();
 
             graphics.beginFill(0x000000, 1.0);
-            graphics.drawRect(X+W/2, Y, W/2, H);
+            graphics.drawRect(INNER_X+INNER_W/2, INNER_Y, INNER_W/2, INNER_H);
             graphics.endFill();
         }
 
@@ -166,11 +172,11 @@ package noiseandheat.flexunit.visuallistener.components
             graphics.lineStyle(1, 0x000000, 0, true, LineScaleMode.NONE);
 
             graphics.beginFill(0xff0000, 1.0);
-            graphics.drawRect(X, Y, W/2, H);
+            graphics.drawRect(INNER_X, INNER_Y, INNER_W/2, INNER_H);
             graphics.endFill();
 
             graphics.beginFill(0x000000, 1.0);
-            graphics.drawRect(X+W/2, Y, W/2, H);
+            graphics.drawRect(INNER_X+INNER_W/2, INNER_Y, INNER_W/2, INNER_H);
             graphics.endFill();
         }
 
@@ -179,7 +185,7 @@ package noiseandheat.flexunit.visuallistener.components
             graphics.lineStyle(1, 0x000000, 0, true, LineScaleMode.NONE);
 
             graphics.beginFill(0xff0000, 1.0);
-            graphics.drawEllipse(X, Y, W, H);
+            graphics.drawEllipse(INNER_X, INNER_Y, INNER_W, INNER_H);
             graphics.endFill();
         }
 
@@ -188,7 +194,7 @@ package noiseandheat.flexunit.visuallistener.components
             graphics.lineStyle(1, 0x000000, 0, true, LineScaleMode.NONE);
 
             graphics.beginFill(0xff0000, 1.0);
-            graphics.drawRect(X, Y, W, H);
+            graphics.drawRect(INNER_X, INNER_Y, INNER_W, INNER_H);
             graphics.endFill();
         }
 
@@ -201,7 +207,7 @@ package noiseandheat.flexunit.visuallistener.components
             graphics.lineStyle(1, 0x000000, 0, true, LineScaleMode.NONE);
 
             graphics.beginFill(0xffffff, 1.0);
-            graphics.drawRect(X, Y, W, H);
+            graphics.drawRect(INNER_X, INNER_Y, INNER_W, INNER_H);
             graphics.endFill();
         }
 
@@ -269,33 +275,41 @@ package noiseandheat.flexunit.visuallistener.components
             _stackTrace = stackTrace || "";
         }
 
+        public function set displayName(name:String):void
+        {
+            _overrideDisplayName = name;
+        }
+
+        public function get displayName():String
+        {
+            if(_overrideDisplayName)
+            {
+                return _overrideDisplayName;
+            }
+            else if(description && description.displayName)
+            {
+               return description.displayName;
+            }
+            else
+            {
+                return "No display name";
+            }
+
+        }
+
         override public function toString():String
         {
-            var message:String = "[no details]";
-
-            if(description) message = "<font color='#888888' size='-1'>[" + description.displayName + "]</font>";
-
-            return message + (_message ? " " + _message : "");
+            return "[" + displayName + "] " + message;
         }
 
         public function toFullString():String
         {
-            var message:String = "[no details]";
-
-            if(description)
-            {
-                message = description.displayName;
-                message += "\n";
-            }
+            var message:String = toString();
 
             if(_stackTrace)
             {
-                message += (_stackTrace ? ": " + _stackTrace : "");
                 message += "\n";
-            }
-            else
-            {
-                message += (_message ? ": " + _message : "");
+                message += (_stackTrace ? ": " + _stackTrace : "");
                 message += "\n";
             }
 
