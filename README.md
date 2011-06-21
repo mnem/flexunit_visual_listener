@@ -32,7 +32,7 @@ Sample test runner:
 	            core.addListener(listener);
 	            
 	            // Add a trace listener too if you want some trace output
-                core.addListener(new TraceListener());
+                core.addListener(new TraceListener(800, 600));
 
 	            core.run(NoiseAndHeatSuite);
 
